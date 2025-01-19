@@ -1,0 +1,417 @@
+@model OC.Models.Forms.Exst001ViewModel;
+
+<style>
+    /* Form specific stylesheet */
+
+    .stepper-wrapper {
+        position: relative;
+        margin-bottom: 40px;
+    }
+
+    .stepper-progress {
+        position: absolute;
+        top: 30px;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+    }
+
+    .progress {
+        height: 2px;
+    }
+
+    .stepper-items {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        z-index: 2;
+    }
+
+    .stepper-item {
+        flex: 1;
+        text-align: center;
+    }
+
+    .step-counter {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #fff;
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 5px;
+    }
+
+    .stepper-item.active .step-counter {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: #fff;
+    }
+
+    .stepper-item.completed .step-counter {
+        background-color: #198754;
+        border-color: #198754;
+        color: #fff;
+    }
+
+    .step-name {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    /* Form section styles */
+    .form-section {
+        display: none;
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+
+    .form-section.active {
+        display: block;
+    }
+
+    /* Responsive adjustments */
+    @@media {
+        (max-width: 768px) {
+            .step-name {
+                font-size: 0.75rem;
+            }
+
+            .stepper-items {
+                flex-wrap: wrap;
+            }
+
+            .stepper-item {
+                flex: 0 0 auto;
+                width: 20%;
+                margin-bottom: 1rem;
+            }
+        }
+    }
+</style>
+
+<div class="container py-5">
+
+    <!-- Progress Stepper -->
+    <div class="stepper-wrapper mb-4">
+        <div class="stepper-progress">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+            </div>
+        </div>
+        <div class="stepper-items">
+            <div class="stepper-item active">
+                <div class="step-counter">1</div>
+                <div class="step-name">Informations de Base</div>
+            </div>
+            <div class="stepper-item">
+                <div class="step-counter">2</div>
+                <div class="step-name">Détails Produit</div>
+            </div>
+            <div class="stepper-item">
+                <div class="step-counter">3</div>
+                <div class="step-name">Quantité & Valeur</div>
+            </div>
+            <div class="stepper-item">
+                <div class="step-counter">4</div>
+                <div class="step-name">Détails Expédition</div>
+            </div>
+            <div class="stepper-item">
+                <div class="step-counter">5</div>
+                <div class="step-name">Informations Additionnelles</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <form method="post" asp-controller="EXST001" asp-action="Submit" id="exst001Form" class="needs-validation"
+        novalidate>
+
+        <!-- Step 1: Basic Information -->
+        <div class="form-section active" data-step="1">
+            <h2 class="mb-4">Informations de Base</h2>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="Periode" class="form-label">Période</label>
+                    <input type="date" asp-for="Periode" class="form-control" id="periode" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="DateCvee" class="form-label">Date C.V.E.E</label>
+                    <input type="date" asp-for="DateCvee" class="form-control" id="dateCVEE" required>
+                </div>
+                <div class="col-12">
+                    <label for="Exportateur" class="form-label">Exportateur</label>
+                    <input type="text" asp-for="Exportateur" class="form-control" id="exportateur" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Product Details -->
+        <div class="form-section" data-step="2">
+            <h2 class="mb-4">Détails Produit</h2>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="Produit" class="form-label">Produit</label>
+                    <input type="text" asp-for="Produit" class="form-control" id="produit" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="CodeDouanier" class="form-label">Code Douanier</label>
+                    <input type="text" asp-for="CodeDouanier" class="form-control" id="codeDouanier">
+                </div>
+                <div class="col-md-6">
+                    <label for="QualiteProduit" class="form-label">Qualité du Produit</label>
+                    <input type="text" asp-for="QualiteProduit" class="form-control" id="qualiteProduit">
+                </div>
+                <div class="col-md-6">
+                    <label for="TypeExportation" class="form-label">Type d'Exportation</label>
+                    <input type="text" asp-for="TypeExportation" class="form-control" id="typeExportation">
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Quantity & Value -->
+        <div class="form-section" data-step="3">
+            <h2 class="mb-4">Quantité & Valeur</h2>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="QuantiteDeclaree" class="form-label">Quantité Déclarée</label>
+                    <input type="number" asp-for="QuantiteDeclaree" class="form-control" id="quantiteDeclaree">
+                </div>
+                <div class="col-md-4">
+                    <label for="QuantiteCertifiee" class="form-label">Quantité Certifiée</label>
+                    <input type="number" asp-for="QuantiteCertifiee" class="form-control" id="quantiteCertifiee">
+                </div>
+                <div class="col-md-4">
+                    <label for="QuantiteExpediee" class="form-label">Quantité Expediée</label>
+                    <input type="number" asp-for="QuantiteExpediee" class="form-control" id="quantiteCertifiee">
+                </div>
+                <div class="col-md-6">
+                    <label for="ValeurFobDevise" class="form-label">Valeur FOB en Devise</label>
+                    <input type="number" asp-for="ValeurFobDevise" class="form-control" id="valeurFOBDevise">
+                </div>
+                <div class="col-md-6">
+                    <label for="ValeurFobUsd" class="form-label">Valeur FOB Convertie en USD</label>
+                    <input type="number" asp-for="ValeurFobUsd" class="form-control" id="valeurFOBUSD">
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Shipping Details -->
+        <div class="form-section" data-step="4">
+            <h2 class="mb-4">Détails Expédition</h2>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="TypeConditionnement" class="form-label">Type de Conditionnement</label>
+                    <input type="text" asp-for="TypeConditionnement" class="form-control" id="typeConditionnement">
+                </div>
+                <div class="col-md-6">
+                    <label for="TailleContainers" class="form-label">Taille de Containers</label>
+                    <input type="text" asp-for="TailleContainers" class="form-control" id="tailleContainers">
+                </div>
+                <div class="col-md-4">
+                    <label for="NumeroConteneur" class="form-label">Numero Conteneur</label>
+                    <input type="text" asp-for="NumeroConteneur" class="form-control" id="numeroConteneur">
+                </div>
+                <div class="col-md-4">
+                    <label for="LieuEmbarquement" class="form-label">Lieu d'Embarquement</label>
+                    <input type="text" asp-for="LieuEmbarquement" class="form-control" id="lieuEmbarquement">
+                </div>
+                <div class="col-md-4">
+                    <label for="TypeEmballage" class="form-label">Type d'Emballage</label>
+                    <input type="text" asp-for="TypeEmballage" class="form-control" id="lieuEmbarquement">
+                </div>
+                <div class="col-md-4">
+                    <label for="PosteSortie" class="form-label">Poste de Sortie</label>
+                    <input type="text" asp-for="PosteSortie" class="form-control" id="lieuEmbarquement">
+                </div>
+                <div class="col-md-4">
+                    <label for="AdresseDestinataire" class="form-label">Adresse du Destinataire</label>
+                    <input type="text" asp-for="AdresseDestinataire" class="form-control" id="lieuEmbarquement">
+                </div>
+                <div class="col-md-4">
+                    <label for="PaysDestination" class="form-label">Pays de Destination</label>
+                    <input type="text" asp-for="PaysDestination" class="form-control" id="lieuEmbarquement">
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Additional Information -->
+        <div class="form-section" data-step="5">
+            <h2 class="mb-4">Informations Additionnelles</h2>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="StatutExportateur" class="form-label">Statut de l'Exportateur</label>
+                    <input type="text" asp-for="StatutExportateur" class="form-control" id="statutExportateur">
+                </div>
+                <div class="col-md-6">
+                    <label for="RegimeExportation" class="form-label">Regime de l'Exportation</label>
+                    <input type="text" asp-for="RegimeExportation" class="form-control" id="regimeExportation">
+                </div>
+                <div class="col-md-6">
+                    <label for="SigleMonetaire" class="form-label">Sigle Monétaire</label>
+                    <input type="text" asp-for="SigleMonetaire" class="form-control" id="sigleMonetaire">
+                </div>
+                <div class="col-md-6">
+                    <label for="FraisOcc" class="form-label">Frais OCC</label>
+                    <input type="number" asp-for="FraisOcc" class="form-control" id="fraisOCC">
+                </div>
+                <div class="col-md-4">
+                    <label for="NumeroLotExport" class="form-label">Numero Lot Pret a l'Export</label>
+                    <input type="number" asp-for="NumeroLotExport" class="form-control" id="fraisOCC">
+                </div>
+                <div class="col-md-4">
+                    <label for="UStat" class="form-label">U.STAT</label>
+                    <input type="text" asp-for="UStat" class="form-control" id="fraisOCC">
+                </div>
+                <div class="col-md-4">
+                    <label for="NumeroCvee" class="form-label">Numero C.V.E.E</label>
+                    <input type="text" asp-for="NumeroCvee" class="form-control" id="fraisOCC">
+                </div>
+                <div class="col-md-6">
+                    <label for="BanqueIntervenante" class="form-label">Banque Intervenante</label>
+                    <input type="text" asp-for="BanqueIntervenante" class="form-control" id="fraisOCC">
+                </div>
+                <div class="col-md-6">
+                    <label for="NumeroLicenseEb" class="form-label">N° License EB</label>
+                    <input type="text" asp-for="NumeroLicenseEb" class="form-control" id="fraisOCC">
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-secondary" id="prevBtn" disabled>Précédent</button>
+            <button type="button" class="btn btn-primary" id="nextBtn">Suivant</button>
+            <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">Soumettre</button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('exst001Form');
+        const sections = document.querySelectorAll('.form-section');
+        const progressBar = document.querySelector('.progress-bar');
+        const stepperItems = document.querySelectorAll('.stepper-item');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        let currentStep = 1;
+        const totalSteps = sections.length;
+
+        // Update progress
+        function updateProgress() {
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            // Update stepper items
+            stepperItems.forEach((item, index) => {
+                if (index + 1 < currentStep) {
+                    item.classList.add('completed');
+                    item.classList.remove('active');
+                } else if (index + 1 === currentStep) {
+                    item.classList.add('active');
+                    item.classList.remove('completed');
+                } else {
+                    item.classList.remove('completed', 'active');
+                }
+            });
+
+            // Update buttons
+            prevBtn.disabled = currentStep === 1;
+            if (currentStep === totalSteps) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        // Show specific step
+        function showStep(step) {
+            sections.forEach(section => {
+                section.classList.remove('active');
+                if (parseInt(section.dataset.step) === step) {
+                    section.classList.add('active');
+                }
+            });
+            currentStep = step;
+            updateProgress();
+        }
+
+        // Reset form
+        function resetForm() {
+            form.reset();
+            showStep(1);
+            stepperItems.forEach(item => {
+                item.classList.remove('completed', 'active');
+            });
+            stepperItems[0].classList.add('active');
+            progressBar.style.width = '0%';
+        }
+
+        // Navigation event listeners
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                showStep(currentStep - 1);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                // Validate current section before proceeding
+                const currentSection = document.querySelector(`.form-section[data-step="${currentStep}"]`);
+                const inputs = currentSection.querySelectorAll('input[required]');
+                let isValid = true;
+
+                inputs.forEach(input => {
+                    if (!input.value) {
+                        isValid = false;
+                        input.classList.add('is-invalid');
+                    } else {
+                        input.classList.remove('is-invalid');
+                    }
+                });
+
+                if (isValid) {
+                    showStep(currentStep + 1);
+                }
+            }
+        });
+
+        // Form submission
+        form.addEventListener('submit', function (e) {
+
+            // Show loading spinner on submit button
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Soumission...';
+
+            // Simulate form submission delay
+            setTimeout(() => {
+                // Hide loading spinner
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Soumettre';
+
+                // Show success modal
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+
+                // Reset form after modal is hidden
+                document.getElementById('successModal').addEventListener('hidden.bs.modal', function () {
+                    resetForm();
+                });
+            }, 1500);
+        });
+
+        // Initialize form
+        showStep(1);
+    });
+</script>
