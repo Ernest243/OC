@@ -16,11 +16,11 @@ public class LoginController : Controller
 
     public IActionResult Index()
     {
-        return View("~/Views/Home/Login.cshtml");
+        return View("~/Views/Shared/Login.cshtml");
     }
 
 
-    public async Task<IActionResult> Login(LoginRequest model)
+    /*public async Task<IActionResult> Login(LoginRequest model)
     {
         try
         {
@@ -57,9 +57,9 @@ public class LoginController : Controller
             ErrorMessage = "An unexpected error occurred.";
             return View();
         }
-    }
+    }*/
 
-    public async Task<IActionResult> LoginT(LoginRequest requestModel)
+    public async Task<IActionResult> Login(LoginRequest requestModel)
     {
         try
         {
@@ -69,7 +69,7 @@ public class LoginController : Controller
             if (response.IsSuccessStatusCode)
             {
                 var jsonResponse = await response.Content.ReadAsStringAsync();
-                var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(jsonResponse);
+                var tokenResponse = JsonSerializer.Deserialize<TokenData>(jsonResponse);
 
                 // Set the access token in an HTTP-only cookie
                 var cookieOptions = new CookieOptions
@@ -77,16 +77,16 @@ public class LoginController : Controller
                     HttpOnly = true,
                     Secure = true, // For HTTPS
                     SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddSeconds(tokenResponse!.Token.ExpiresIn)
+                    Expires = DateTime.UtcNow.AddSeconds(tokenResponse!.ExpiresIn)
                 };
 
-                Response.Cookies.Append("AccessToken", tokenResponse.Token.AccessToken, cookieOptions);
-                Response.Cookies.Append("RefreshToken", tokenResponse.Token.RefreshToken, cookieOptions);
+                Response.Cookies.Append("AccessToken", tokenResponse.AccessToken, cookieOptions);
+                Response.Cookies.Append("RefreshToken", tokenResponse.RefreshToken, cookieOptions);
 
                 client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", tokenResponse.Token.AccessToken);
+                    new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
 
-                return RedirectToPage("/Dashboard");
+                return View("~/Views/Dashboard/Dashboard.cshtml");
             }
             else
             {
