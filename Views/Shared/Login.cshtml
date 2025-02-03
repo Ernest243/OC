@@ -1,5 +1,6 @@
 @model OC.Models.LoginRequest
 @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Login Page";
 }
 
@@ -28,5 +29,5 @@
         <button class="btn btn-primary w-100" type="submit">Sign in</button>
     </form>
     <div asp-validation-summary="All" class="text-danger"></div>
-    <p class="mt-5 mb-3 text-muted text-center">© 2017–2024</p>
+    <p class="mt-5 mb-3 text-muted text-center">@DateTime.Today.Year</p>
 </div>
