@@ -19,46 +19,6 @@ public class LoginController : Controller
         return View("~/Views/Shared/Login.cshtml");
     }
 
-
-    /*public async Task<IActionResult> Login(LoginRequest model)
-    {
-        try
-        {
-            var client = _httpClientFactory.CreateClient();
-            var logRequest = new
-            {
-                Email = model.Email,
-                Password = model.Password
-            };
-
-            var response = await client.PostAsJsonAsync("http://localhost:5164/api/Auth/login", model);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-
-                // Register token in cookies to be retrieved later
-
-                // Redirect the user to the Dashboard
-
-                return RedirectToPage("");
-            }
-            else
-            {
-                var errorMessage = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"API Error: {errorMessage}");
-                ErrorMessage = "Invalid credentials or API error.";
-                return View();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-            ErrorMessage = "An unexpected error occurred.";
-            return View();
-        }
-    }*/
-
     public async Task<IActionResult> Login(LoginRequest requestModel)
     {
         try
@@ -69,7 +29,13 @@ public class LoginController : Controller
             if (response.IsSuccessStatusCode)
             {
                 var jsonResponse = await response.Content.ReadAsStringAsync();
-                var tokenResponse = JsonSerializer.Deserialize<TokenData>(jsonResponse);
+                
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(jsonResponse, options);
 
                 // Set the access token in an HTTP-only cookie
                 var cookieOptions = new CookieOptions
@@ -77,14 +43,14 @@ public class LoginController : Controller
                     HttpOnly = true,
                     Secure = true, // For HTTPS
                     SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddSeconds(tokenResponse!.ExpiresIn)
+                    Expires = DateTime.UtcNow.AddSeconds(tokenResponse!.Token.ExpiresIn)
                 };
 
-                Response.Cookies.Append("AccessToken", tokenResponse.AccessToken, cookieOptions);
-                Response.Cookies.Append("RefreshToken", tokenResponse.RefreshToken, cookieOptions);
+                Response.Cookies.Append("AccessToken", tokenResponse.Token.AccessToken, cookieOptions);
+                Response.Cookies.Append("RefreshToken", tokenResponse.Token.RefreshToken, cookieOptions);
 
                 client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
+                    new AuthenticationHeaderValue("Bearer", tokenResponse.Token.AccessToken);
 
                 return View("~/Views/Dashboard/Dashboard.cshtml");
             }

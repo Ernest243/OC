@@ -167,7 +167,7 @@
         </nav>
 
         <!-- Main Content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="mainContentDash">
             <div
                 class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Dashboard</h1>
@@ -221,8 +221,34 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Click event tbody thead EX-ST001 link
+        $('#loadEXST001').on('click', function (e) {
+            e.preventDefault(); // prevent default link behavior
+
+            // Show a loading spinner while the content is being fetched
+            $('#mainContentDash').html('<div class="d-flex justify-content-center mt-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+            // Simulate a delay to extend the spinner effect
+            setTimeout(function () {
+                $('#mainContentDash').load('/Forms/EXST001', function (response, status, xhr) {
+                    if (status === "error"){
+                        // Handle error
+                        console.error("Error loading form:", xhr.statusText);
+                    } else {
+                        // Hide other elements on successful form load
+                        $('#myChart').hide();
+                        $('#dynamicContent').hide();
+                    }
+                });
+            }, 700); // 1000ms (1 second) delay
+        });
+    });
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="/js/dashboard.js"></script>
 <script>
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
