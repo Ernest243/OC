@@ -21,9 +21,41 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="#">
-                            <i class="bi bi-people"></i> Agents
+                        <a class="nav-link text-dark" data-bs-toggle="collapse" href="#collapseADM"
+                            aria-controls="false" aria-controls="collapseADM">
+                            <i class="bi bi-people"></i> Administration
                         </a>
+                        <div class="collapse" id="collapseADM">
+                            <div class="nav-link text-dark">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" data-bs-toggle="collapse"
+                                            href="#" aria-controls="false" aria-controls="">
+                                            <i class="bi bi-diagram-3-fill"></i></i> Structure
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a  class="nav-link text-dark" data-bs-toggle="collapse"
+                                             href="#" aria-controls="false" aria-controls="collapseADM" 
+                                            id="loadNouveau">
+                                            <i class="bi bi-person-fill-add"></i> Ajouter
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" data-bs-toggle="collapse"
+                                            href="#" aria-controls="false" aria-controls="">
+                                            <i class="bi bi-list"></i> Liste
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" data-bs-toggle="collapse"
+                                            href="#" aria-controls="false" aria-controls="">
+                                            <i class="bi bi-search"></i> Rechercher
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" data-bs-toggle="collapse" href="#collapseOptions"
@@ -245,6 +277,28 @@
                 });
             }, 700); // 1000ms (1 second) delay
         });
+
+        //# Click event tbody thead new employee
+        $('#loadNouveau').on('click', function (e) {
+            e.preventDefault();
+
+            $('#mainContentDash').html('<div class="d-flex justify-content-center mt-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+
+            // Simulate a delay to extend the spinner effect
+            setTimeout(function () {
+                $('#mainContentDash').load('/Administration/Nouveau', function (response, status, xhr) {
+                    if (status === "error"){
+                        // Handle error
+                        console.error("Error loading form:", xhr.statusText);
+                    } else {
+                        // Hide other elements on successful form load
+                        $('#myChart').hide();
+                        $('#dynamicContent').hide();
+                    }
+                });
+            }, 700); // 1000ms (1 second) delay
+        })
     });
 </script>
 
